@@ -24,25 +24,6 @@ class BinaryTree {
         root = null;
     }
 
-    public int findMaxBtRecursive(Node rt) {
-        if(root.left == null && root.right == null) {
-            return root.data;
-        }
-
-        int max = rt.data;
-        int leftMax = rt.left == null ? rt.data : findMaxBtRecursive(rt.left);
-        int rightMax = rt.right == null ? rt.data : findMaxBtRecursive(rt.right);
-
-        if(max<leftMax){
-            max = leftMax;
-        }
-        if(max<rightMax){
-            max = rightMax;
-        }
-
-        return max;
-    }
-
     public void levelOrderTraversal(Node rt) {
         if(rt == null) return;
 
@@ -67,6 +48,58 @@ class BinaryTree {
         }    
     }
 
+    public int findMaxBtRecursive(Node rt) {
+        if(root.left == null && root.right == null) {
+            return root.data;
+        }
+
+        int max = rt.data;
+        int leftMax = rt.left == null ? rt.data : findMaxBtRecursive(rt.left);
+        int rightMax = rt.right == null ? rt.data : findMaxBtRecursive(rt.right);
+
+        if(max<leftMax){
+            max = leftMax;
+        }
+        if(max<rightMax){
+            max = rightMax;
+        }
+        return max;
+    }
+
+    public boolean searchElementInBtRecursive(Node rt, int key) {
+        if(rt == null) return false;
+
+        if(rt.data == key) return true;
+
+        return searchElementInBtRecursive(rt.left,key) || searchElementInBtRecursive(rt.right,key);
+    }
+
+    public void printElementsInReverseLOT(Node rt) {
+        if(rt == null) return;
+        Queue<Node> q = new LinkedList<>();
+        q.add(rt);
+        Stack<Integer> s = new Stack<>();
+        while(!q.isEmpty()){
+            Node temp = q.remove();
+            if(temp.right != null){
+                q.add(temp.right);
+            }
+            if(temp.left != null){
+                q.add(temp.left);
+            }
+            s.push(temp.data);
+        }
+        while(!s.isEmpty()){
+            System.out.print(s.pop() + " ");
+        }
+    }
+
+    // public void deleteBinaryTree(Node rt) {
+    //     if(rt.left == null && rt.right == null) return null;
+    //     rt.left = 
+
+    // }
+
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
         bt.root.left = new Node(5);
@@ -79,6 +112,10 @@ class BinaryTree {
         System.out.println("Right node ==> "+ bt.root.right.data);
         System.out.println("Maximum in Binary Tree => " + bt.findMaxBtRecursive(bt.root));
         bt.levelOrderTraversal(bt.root);
+        System.out.println("");
+        System.out.println("Is the value "+ 12 + " present in this Binary Tree ? "+ bt.searchElementInBtRecursive(bt.root, 12));
+        System.out.println("Binary tree elements printed in reverse order "); 
+        bt.printElementsInReverseLOT(bt.root);
     }
 
 }
