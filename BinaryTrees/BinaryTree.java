@@ -150,6 +150,23 @@ class BinaryTree {
         return lheight>rheight?lheight+1:rheight+1;
         
     }
+
+    public void printAllRootToLeafPaths(Node rt, int a[], int arrLength) {
+        if(rt == null) return;
+
+        if (rt.left == null && rt.right == null) {
+            for(int i=0;i<arrLength;i++)
+                System.out.print(a[i] + " ");
+            System.out.print(rt.data);
+            System.out.println();
+            return;
+        }
+        a[arrLength] = rt.data;
+        arrLength ++;
+        // System.out.println("rt.data is => "+ rt.data);
+        printAllRootToLeafPaths(rt.left, a, arrLength);
+        printAllRootToLeafPaths(rt.right, a, arrLength);
+    }
     
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
@@ -184,6 +201,9 @@ class BinaryTree {
         System.out.println("Are the two trees structurally identical ? " + bt.findIfTwoBinaryTreesAreStructurallyIdentical(bt.root,bt1.root));
         bt.findDiameterOfBinaryTree(bt.root);
         System.out.println("Diameter of the Binary Tree is -> " + diameter);
+        System.out.println("All root to leaf paths are :- ");
+        int[] arr = new int[100];
+        bt.printAllRootToLeafPaths(bt.root, arr, 0);
     }
 
 }
