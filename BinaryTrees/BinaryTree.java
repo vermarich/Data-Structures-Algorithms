@@ -15,7 +15,7 @@ class Node {
 
 class BinaryTree {
     Node root;
-    static int maxDepth;
+    static int maxDepth, diameter;
 
     BinaryTree(int val) {
         root = new Node(val);
@@ -134,6 +134,23 @@ class BinaryTree {
 
     }
 
+    public int findDiameterOfBinaryTree(Node rt) {
+        if(rt == null) return 0;
+
+        int tempDia = 0;
+        
+        int lheight = findDiameterOfBinaryTree(rt.left);
+        int rheight = findDiameterOfBinaryTree(rt.right);
+
+        tempDia = lheight + rheight + 1;
+        if(tempDia > diameter) {
+            diameter = tempDia;
+        }
+
+        return lheight>rheight?lheight+1:rheight+1;
+        
+    }
+    
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
         bt.root.left = new Node(5);
@@ -142,6 +159,9 @@ class BinaryTree {
         bt.root.left.right = new Node(50);
         bt.root.right.right = new Node(100);
         bt.root.right.right.left = new Node(200);
+        bt.root.right.right.right = new Node(150);
+        bt.root.right.right.right.left = new Node(170);
+        bt.root.right.right.right.right = new Node(180);
         BinaryTree bt1 = new BinaryTree(10);
         bt1.root.left = new Node(5);
         bt1.root.right = new Node(12);
@@ -162,6 +182,8 @@ class BinaryTree {
         bt.deepestNodeInBt(bt.root,0);
         System.out.println("Maximum depth of Binary Tree "+ maxDepth);
         System.out.println("Are the two trees structurally identical ? " + bt.findIfTwoBinaryTreesAreStructurallyIdentical(bt.root,bt1.root));
+        bt.findDiameterOfBinaryTree(bt.root);
+        System.out.println("Diameter of the Binary Tree is -> " + diameter);
     }
 
 }
