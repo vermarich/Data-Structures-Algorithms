@@ -117,6 +117,23 @@ class BinaryTree {
         deepestNodeInBt(rt.right, currDepth);
     }
 
+    public boolean findIfTwoBinaryTreesAreStructurallyIdentical(Node rt1, Node rt2) {
+        if(rt1 == null && rt2 == null) {
+            return true;
+        }
+
+        if(rt1 == null || rt2 == null) {
+            return false;
+        }
+
+        if(rt1.data == rt2.data){
+            return findIfTwoBinaryTreesAreStructurallyIdentical(rt1.left,rt2.left) && findIfTwoBinaryTreesAreStructurallyIdentical(rt1.right,rt2.right);
+        }else{
+            return false;
+        }
+
+    }
+
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
         bt.root.left = new Node(5);
@@ -125,6 +142,13 @@ class BinaryTree {
         bt.root.left.right = new Node(50);
         bt.root.right.right = new Node(100);
         bt.root.right.right.left = new Node(200);
+        BinaryTree bt1 = new BinaryTree(10);
+        bt1.root.left = new Node(5);
+        bt1.root.right = new Node(12);
+        bt1.root.left.left = new Node(-13);
+        bt1.root.left.right = new Node(50);
+        bt1.root.right.right = new Node(100);
+        bt1.root.right.right.left = new Node(200);
         System.out.println("Root node ==> "+ bt.root.data);
         System.out.println("Left node ==> "+ bt.root.left.data);
         System.out.println("Right node ==> "+ bt.root.right.data);
@@ -137,6 +161,7 @@ class BinaryTree {
         System.out.println(" ");
         bt.deepestNodeInBt(bt.root,0);
         System.out.println("Maximum depth of Binary Tree "+ maxDepth);
+        System.out.println("Are the two trees structurally identical ? " + bt.findIfTwoBinaryTreesAreStructurallyIdentical(bt.root,bt1.root));
     }
 
 }
