@@ -163,7 +163,6 @@ class BinaryTree {
         }
         a[arrLength] = rt.data;
         arrLength ++;
-        // System.out.println("rt.data is => "+ rt.data);
         printAllRootToLeafPaths(rt.left, a, arrLength);
         printAllRootToLeafPaths(rt.right, a, arrLength);
     }
@@ -184,9 +183,27 @@ class BinaryTree {
         a[arrLength] = rt.data;
         arrLength ++;
         return findRootToLeafPathWithAGivenSum(rt.left, a, arrLength, key) || findRootToLeafPathWithAGivenSum(rt.right, a, arrLength, key);
-        
     }
-    
+
+    public void convertBinaryTreeToItsMirror(Node rt) {
+        if(rt == null) return;
+
+        Node temp = rt.left;
+        rt.left = rt.right;
+        rt.right = temp;
+
+        convertBinaryTreeToItsMirror(rt.left);
+        convertBinaryTreeToItsMirror(rt.right);
+
+    }
+
+    public boolean checkIfTwoTreesAreMirrorsOfEachOther(Node rt1, Node rt2) {
+        if(rt1 == null && rt2 == null) return true;
+        if(rt1 == null || rt2 == null) return false;
+
+        return checkIfTwoTreesAreMirrorsOfEachOther(rt1.left,rt2.right) && checkIfTwoTreesAreMirrorsOfEachOther(rt1.right,rt2.left);
+    }
+
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
         bt.root.left = new Node(5);
@@ -224,6 +241,28 @@ class BinaryTree {
         int[] arr = new int[100];
         bt.printAllRootToLeafPaths(bt.root, arr, 0);
         System.out.println("Root to leaf path with sum 452 exists ?" + bt.findRootToLeafPathWithAGivenSum(bt.root, arr, 0, 452));
+        System.out.println("Converting the Binary Tree to its mirror ");
+        bt.convertBinaryTreeToItsMirror(bt.root);
+        System.out.println("Level order traversal of mirror of the tree ");
+        bt.levelOrderTraversal(bt.root);
+        BinaryTree mirrorTree = new BinaryTree(10);
+        mirrorTree.root.left = new Node(5);
+        mirrorTree.root.right = new Node(12);
+        mirrorTree.root.left.left = new Node(-13);
+        mirrorTree.root.left.right = new Node(50);
+        mirrorTree.root.right.right = new Node(100);
+        mirrorTree.root.right.right.left = new Node(200);
+        mirrorTree.root.right.right.right = new Node(150);
+        mirrorTree.root.right.right.right.left = new Node(170);
+        mirrorTree.root.right.right.right.right = new Node(180);
+        System.out.println("Level order traversal of mirror of the new tree ");
+        bt.levelOrderTraversal(mirrorTree.root);
+        System.out.println("Are theses two trees mirrors of each other? "+ bt.checkIfTwoTreesAreMirrorsOfEachOther(bt.root,mirrorTree.root));
+        System.out.println("Re-Converting the Binary Tree to its mirror ");
+        bt.convertBinaryTreeToItsMirror(bt.root);
+        System.out.println("Level order traversal of tree in its original form ");
+        bt.levelOrderTraversal(bt.root);
+        System.out.println();
     }
 
 }
