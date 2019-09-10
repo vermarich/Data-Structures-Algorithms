@@ -167,6 +167,25 @@ class BinaryTree {
         printAllRootToLeafPaths(rt.left, a, arrLength);
         printAllRootToLeafPaths(rt.right, a, arrLength);
     }
+
+    public boolean findRootToLeafPathWithAGivenSum(Node rt, int a[], int arrLength, int key) {
+        if(rt == null) return false;
+
+        if (rt.left == null && rt.right == null) {
+            int sum = 0;
+            for(int i=0;i<arrLength;i++)
+                sum += a[i];
+            sum += rt.data;
+            if (sum == key)
+                return true;
+            else
+                return false;
+        }
+        a[arrLength] = rt.data;
+        arrLength ++;
+        return findRootToLeafPathWithAGivenSum(rt.left, a, arrLength, key) || findRootToLeafPathWithAGivenSum(rt.right, a, arrLength, key);
+        
+    }
     
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
@@ -204,6 +223,7 @@ class BinaryTree {
         System.out.println("All root to leaf paths are :- ");
         int[] arr = new int[100];
         bt.printAllRootToLeafPaths(bt.root, arr, 0);
+        System.out.println("Root to leaf path with sum 452 exists ?" + bt.findRootToLeafPathWithAGivenSum(bt.root, arr, 0, 452));
     }
 
 }
