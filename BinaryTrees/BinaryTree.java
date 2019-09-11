@@ -15,7 +15,8 @@ class Node {
 
 class BinaryTree {
     Node root;
-    static int maxDepth, diameter;
+    static int maxDepth, diameter; 
+    static Node lca = null;
 
     BinaryTree(int val) {
         root = new Node(val);
@@ -204,6 +205,47 @@ class BinaryTree {
         return checkIfTwoTreesAreMirrorsOfEachOther(rt1.left,rt2.right) && checkIfTwoTreesAreMirrorsOfEachOther(rt1.right,rt2.left);
     }
 
+    /* -------- This function doesn't take care of the condition when only one of the required nodes is present -------*/
+    public Node findLowestCommonAncestorsOfTwoNodesInBt1(Node rt, int key1, int key2) { 
+        if(rt == null) return null;
+        Node left = null, right = null;
+
+        if(rt.data == key1 || rt.data == key2){
+           return rt;
+        }
+
+        left = findLowestCommonAncestorsOfTwoNodesInBt1(rt.left, key1, key2);
+        right = findLowestCommonAncestorsOfTwoNodesInBt1(rt.right, key1, key2);
+
+        if(left != null && right != null)
+            return  rt;
+        else if(left != null)
+            return left;
+        else return right;
+        
+    }
+
+    /* ------ This gives a Null Pointer exception if both nodes are not present in the Binary Tree ------ */
+    public Node findLowestCommonAncestorsOfTwoNodesInBt2(Node rt, int key1, int key2) { 
+        if(rt == null) return null;
+        Node r = null, left = null, right = null;
+
+        if(rt.data == key1 || rt.data == key2){
+           r = rt;
+        }
+
+        left = findLowestCommonAncestorsOfTwoNodesInBt2(rt.left, key1, key2);
+        right = findLowestCommonAncestorsOfTwoNodesInBt2(rt.right, key1, key2);
+
+        if((r != null && left != null) || (r!= null && right!= null))
+            lca = r;
+        else if((left != null && right != null))
+            lca = rt;
+
+        if(r!=null) return r;
+        else if(left != null) return left;
+        else return right;
+    }
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
         bt.root.left = new Node(5);
@@ -263,6 +305,9 @@ class BinaryTree {
         System.out.println("Level order traversal of tree in its original form ");
         bt.levelOrderTraversal(bt.root);
         System.out.println();
+        System.out.println("Lowest common ancestors 1 " + (bt.findLowestCommonAncestorsOfTwoNodesInBt1(bt.root, 170, 180)).data);
+        bt.findLowestCommonAncestorsOfTwoNodesInBt2(bt.root, 170, 180);
+        System.out.println("Lowest common ancestors 2 " + lca.data); //This gives a Null Pointer exception if both nodes are not present in the Binary Tree
     }
 
 }
