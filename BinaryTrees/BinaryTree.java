@@ -15,7 +15,7 @@ class Node {
 
 class BinaryTree {
     Node root;
-    static int maxDepth, diameter; 
+    static int maxDepth, diameter, preOrderIndex = 0; 
     static Node lca = null;
 
     BinaryTree(int val) {
@@ -246,6 +246,119 @@ class BinaryTree {
         else if(left != null) return left;
         else return right;
     }
+
+    // public Node buildBtFromPreAndInorderTraversal(int preorder[], int inorder[], int s2, int e2) {
+    //     System.out.println("preOrderIndex " + preOrderIndex);
+    //     System.out.println("s2 "+ s2 + " e2 " + e2);
+    //     if(s2 > e2) return null;
+        
+    //     Node root = new Node(preorder[preOrderIndex++]);
+
+    //     if(s2 == e2) return root;
+
+       
+        
+
+    //     int index = -1;
+    //     for(int i= s2; i< e2; i++) {
+    //         if(inorder[i] == root.data){
+    //             index = i;
+    //             break;
+    //         }
+    //     }
+    //     root.left = buildBtFromPreAndInorderTraversal(preorder, inorder, s2, index-1);
+    //     root.right = buildBtFromPreAndInorderTraversal(preorder, inorder, index+1, e2);
+
+    //     return root;
+    // }
+
+
+    public int sumTree(Node rt) {
+        if(rt == null) return 0;
+
+        int old_value = rt.data;
+
+        rt.data = sumTree(rt.left) + sumTree(rt.right);
+        return rt.data + old_value;
+
+    }
+
+    /*------ Value of leaf nodes is not changed and nodes can have negative values ------*/
+    public Node sumTreeModified(Node rt) {
+        if(rt == null) return null;
+
+        int old_value = rt.data;
+
+        Node leftSum = sumTreeModified(rt.left);
+        Node rightSum = sumTreeModified(rt.right);
+
+        if(leftSum==null && rightSum==null) {
+            return rt;
+        }
+
+        if(leftSum!=null && rightSum!=null) {
+            rt.data = leftSum.data + rightSum.data;
+        }
+
+        if(leftSum == null) {
+            rt.data = rightSum.data;
+        }
+
+        if(rightSum == null) {
+            rt.data = leftSum.data;
+        }
+
+        return new Node (rt.data + old_value);
+    }
+
+    public void printAllAncestorsOfANode(Node rt, int key, int index, int arr[]) {
+
+        if(rt == null) return;
+
+        arr[index++] = rt.data;
+
+        if(rt.data == key) {
+            for(int i=0;i<index;i++)
+                System.out.println(arr[i]);
+        return;
+        }
+
+        printAllAncestorsOfANode(rt.left, key, index, arr);
+        printAllAncestorsOfANode(rt.right, key, index, arr);
+
+    }
+
+    public void zigzagTraversalOfBinaryTree(Node rt) {
+        if (rt == null) return;
+
+        Queue<Node> q = new LinkedList<>();
+        q.add(rt);
+        q.add(null);
+        boolean rightToLeft = false;
+        Stack<Integer> s = new Stack<>();
+
+        while(!q.isEmpty()) {
+            Node temp = q.remove();
+            if(temp != null) {
+                if(temp.left != null) q.add(temp.left);
+                if(temp.right != null) q.add(temp.right);
+                if(rightToLeft) {
+                    s.push(temp.data);
+                }else {
+                    System.out.print(temp.data + " ");
+                }
+            }else {
+                rightToLeft = !rightToLeft;
+                while(!s.isEmpty()){
+                    System.out.print(s.pop() + " ");
+                }
+                if(!q.isEmpty())
+                    q.add(null);
+            }
+        }
+
+    }
+
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree(10);
         bt.root.left = new Node(5);
@@ -308,6 +421,26 @@ class BinaryTree {
         System.out.println("Lowest common ancestors 1 " + (bt.findLowestCommonAncestorsOfTwoNodesInBt1(bt.root, 170, 180)).data);
         bt.findLowestCommonAncestorsOfTwoNodesInBt2(bt.root, 170, 180);
         System.out.println("Lowest common ancestors 2 " + lca.data); //This gives a Null Pointer exception if both nodes are not present in the Binary Tree
+        
+        // int pre[] = {1,2,3,4,5,6,7};
+        // int ino[] = {4,2,5,1,6,3,7};
+        // Node newTree = bt.buildBtFromPreAndInorderTraversal2(pre, ino, 0, 7);
+        // System.out.println("The new tree built from preorder and inorder is :-");
+        // bt.levelOrderTraversal(newTree);
+
+        // BinaryTree bt2 = bt;
+        // bt.sumTree(bt2.root);
+        // bt.levelOrderTraversal(bt2.root);
+
+        // BinaryTree bt3 = bt;
+        // bt.sumTreeModified(bt3.root);
+        // bt.levelOrderTraversal(bt3.root);
+
+        int ancestors[] = new int[100];
+        bt.printAllAncestorsOfANode(bt.root, 200, 0, ancestors);
+
+        bt.zigzagTraversalOfBinaryTree(bt.root);
+
     }
 
 }
